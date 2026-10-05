@@ -11,6 +11,25 @@ its hours, the order, rider and menu webhooks checked - through the Deliveroo Pa
 > (https://api-docs.deliveroo.com, read on 2026-10-04) and tested against recorded answers. Its
 > sandbox (`sandbox: true`) is the first step.
 
+```php
+use Omnifood\Deliveroo\DeliverooPlatformFactory;
+use Symfony\Component\HttpClient\HttpClient;
+
+$deliveroo = (new DeliverooPlatformFactory(HttpClient::create()))->create([
+    'client_id' => getenv('DELIVEROO_CLIENT_ID') ?: null,
+    'client_secret' => getenv('DELIVEROO_CLIENT_SECRET') ?: null,
+    'brand_id' => getenv('DELIVEROO_BRAND_ID') ?: null,
+    'site_id' => getenv('DELIVEROO_SITE_ID') ?: null,
+    'menu_id' => getenv('DELIVEROO_MENU_ID') ?: null,
+    'webhook_secret' => getenv('DELIVEROO_WEBHOOK_SECRET') ?: null,
+    'sandbox' => true,
+]);
+```
+
+Plain PHP, no framework needed: the factory takes any `HttpClientInterface` - the application's, a
+`MockHttpClient` in a test - and makes its own when given none. In a Symfony application, the same
+options under `omnifood.platforms` ([the bundle](https://github.com/glitchr-studio/omnifood/blob/1.x/docs/symfony.md)):
+
 ```yaml
 omnifood:
     platforms:

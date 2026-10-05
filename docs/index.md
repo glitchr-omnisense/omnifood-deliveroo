@@ -8,6 +8,26 @@ composer require glitchr/omnifood omnifood/deliveroo
 
 ## Configuration
 
+```php
+use Omnifood\Deliveroo\DeliverooPlatformFactory;
+use Symfony\Component\HttpClient\HttpClient;
+
+$deliveroo = (new DeliverooPlatformFactory(HttpClient::create()))->create([
+    'client_id' => getenv('DELIVEROO_CLIENT_ID') ?: null,
+    'client_secret' => getenv('DELIVEROO_CLIENT_SECRET') ?: null,
+    'brand_id' => getenv('DELIVEROO_BRAND_ID') ?: null,
+    'site_id' => getenv('DELIVEROO_SITE_ID') ?: null,
+    'menu_id' => getenv('DELIVEROO_MENU_ID') ?: null,
+    'webhook_secret' => getenv('DELIVEROO_WEBHOOK_SECRET') ?: null,
+    'sandbox' => true,
+]);
+```
+
+The factory takes any `HttpClientInterface` (the application's, a `MockHttpClient` in a test) and
+makes its own when given none; several platforms go in a `Registry`
+([the core's installation](https://github.com/glitchr-studio/omnifood/blob/1.x/docs/installation.md)).
+In a Symfony application, the same options in `config/packages/omnifood.yaml`:
+
 ```yaml
 omnifood:
     platforms:
