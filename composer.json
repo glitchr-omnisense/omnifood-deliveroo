@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Omnifood Deliveroo: the orders (read, listed, accepted, rejected, prep stages), the menu and the items out of stock, the site opened or closed and its hours, the order and rider webhooks checked - through the Deliveroo Partner Platform APIs.",
     "keywords": ["restaurant", "delivery", "deliveroo", "omnifood"],
-    "license": "LGPL-3.0-or-later",
+    "license": "MIT",
     "authors": [{"name": "Marco Meyer", "email": "marco.meyer@glitchr.io"}],
     "require": {
         "php": ">=8.2",

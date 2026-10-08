@@ -92,4 +92,4 @@ Not sent: `accept()`'s ready time (Deliveroo's `prepare_for` stands), the pause'
 - The **webhook URLs** (order and rider events) configured, then the **webhook secret** the account
   manager sends. A tablet-less site is switched by the account manager.
 
-License: LGPL-3.0-or-later.
+License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
