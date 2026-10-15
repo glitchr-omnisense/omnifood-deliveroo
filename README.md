@@ -92,4 +92,17 @@ Not sent: `accept()`'s ready time (Deliveroo's `prepare_for` stands), the pause'
 - The **webhook URLs** (order and rider events) configured, then the **webhook secret** the account
   manager sends. A tablet-less site is switched by the account manager.
 
+## Responsibility
+
+This package is an independent, unofficial client: it is not affiliated with, endorsed by or
+sponsored by Deliveroo (Roofoods Ltd). It reaches their service on behalf of whoever runs it, and it
+does not redistribute their data beyond the short excerpts recorded as test fixtures. Its MIT
+licence covers this package's code only and grants no right to the service or to its data.
+
+Whoever installs and runs this package is responsible for complying with Deliveroo's terms ([API
+Deliveroo Developers Terms of Use](https://developers.deliveroo.com/terms)), for obtaining whatever
+they require (an account, a key, a licence or subscription, an attribution or a citation, a rate
+limit to respect), and for any use made of what it returns. The authors publish it free of charge,
+make no commercial use of it, and accept no liability for how it is used (see [LICENSE](LICENSE)).
+
 License: MIT since 2026-10-09; earlier versions remain published under LGPL-3.0-or-later.
