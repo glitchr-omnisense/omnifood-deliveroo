@@ -7,7 +7,7 @@
     "authors": [{"name": "Marco Meyer", "email": "marco.meyer@glitchr.io"}],
     "require": {
         "php": ">=8.2",
-        "glitchr/omnifood": "^1.0@dev",
+        "omniscient/omnifood": "^1.0@dev",
         "symfony/http-client": "^6.4|^7.0|^8.0"
     },
     "require-dev": {

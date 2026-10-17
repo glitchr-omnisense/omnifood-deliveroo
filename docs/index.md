@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-composer require glitchr/omnifood omnifood/deliveroo
+composer require omniscient/omnifood omnifood/deliveroo
 ```
 
 ## Configuration

@@ -1,6 +1,6 @@
 # omnifood/deliveroo
 
-Deliveroo for [glitchr/omnifood](https://github.com/glitchr-studio/omnifood): the site's orders read
+Deliveroo for [omniscient/omnifood](https://github.com/glitchr-studio/omnifood): the site's orders read
 and listed, accepted or rejected (or their sync status, for a site with a Deliveroo tablet), the
 kitchen's prep stages, the menu uploaded and its items made unavailable, the site opened, closed and
 its hours, the order, rider and menu webhooks checked - through the Deliveroo Partner Platform
