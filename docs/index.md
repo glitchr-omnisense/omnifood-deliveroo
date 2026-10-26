@@ -3,7 +3,7 @@
 ## Installation
 
 ```sh
-composer require omniscient/omnifood omnifood/deliveroo
+composer require omnisense/omnifood omnifood/deliveroo
 ```
 
 ## Configuration
@@ -25,7 +25,7 @@ $deliveroo = (new DeliverooPlatformFactory(HttpClient::create()))->create([
 
 The factory takes any `HttpClientInterface` (the application's, a `MockHttpClient` in a test) and
 makes its own when given none; several platforms go in a `Registry`
-([the core's installation](https://github.com/glitchr-studio/omnifood/blob/1.x/docs/installation.md)).
+([the core's installation](https://github.com/glitchr-omnisense/omnifood/blob/1.x/docs/installation.md)).
 In a Symfony application, the same options in `config/packages/omnifood.yaml`:
 
 ```yaml

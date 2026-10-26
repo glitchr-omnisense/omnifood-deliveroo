@@ -1,6 +1,6 @@
 # omnifood/deliveroo
 
-Deliveroo for [omniscient/omnifood](https://github.com/glitchr-studio/omnifood): the site's orders read
+Deliveroo for [omnisense/omnifood](https://github.com/glitchr-omnisense/omnifood): the site's orders read
 and listed, accepted or rejected (or their sync status, for a site with a Deliveroo tablet), the
 kitchen's prep stages, the menu uploaded and its items made unavailable, the site opened, closed and
 its hours, the order, rider and menu webhooks checked - through the Deliveroo Partner Platform
@@ -28,7 +28,7 @@ $deliveroo = (new DeliverooPlatformFactory(HttpClient::create()))->create([
 
 Plain PHP, no framework needed: the factory takes any `HttpClientInterface` - the application's, a
 `MockHttpClient` in a test - and makes its own when given none. In a Symfony application, the same
-options under `omnifood.platforms` ([the bundle](https://github.com/glitchr-studio/omnifood/blob/1.x/docs/symfony.md)):
+options under `omnifood.platforms` ([the bundle](https://github.com/glitchr-omnisense/omnifood/blob/1.x/docs/symfony.md)):
 
 ```yaml
 omnifood:
