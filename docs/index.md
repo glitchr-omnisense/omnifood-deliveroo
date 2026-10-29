@@ -228,6 +228,12 @@ Not run live (no keys).
   nothing sent. A webhook not signed or not JSON: `InvalidSignatureException`; no
   `webhook_secret`: `InvalidConfigException`.
 
+No failure carries the client secret and the token: a network failure's message has them masked as
+`***` (the key parameters of a URL too), its previous is a copy of the HTTP client's exception (the
+same class and code), and no trace of the chain keeps its arguments, where the request's options
+stood ([No secret in a
+failure](https://github.com/glitchr-omnisense/omnifood/blob/1.x/docs/errors.md#no-secret-in-a-failure)).
+
 ## Verified, and not
 
 `Tests/DeliverooPlatformTest.php` checks, on recorded answers written from Deliveroo's public

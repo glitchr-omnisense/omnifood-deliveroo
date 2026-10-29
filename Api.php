@@ -5,6 +5,7 @@ namespace Omnifood\Deliveroo;
 use Omnifood\Exception\InvalidConfigException;
 use Omnifood\Exception\ProviderException;
 use Omnifood\Exception\UnauthorizedException;
+use Omnifood\Http\Redaction;
 use Omnifood\Model\Token;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpExceptionInterface;
@@ -76,14 +77,14 @@ final class Api
     public function refresh(): Token
     {
         if (!$this->clientId || !$this->clientSecret) {
-            throw new InvalidConfigException('The "deliveroo" platform needs: client_id, client_secret.');
+            throw Redaction::withoutArguments(new InvalidConfigException('The "deliveroo" platform needs: client_id, client_secret.'));
         }
         $data = $this->send('POST', $this->tokenUrl, [
             'auth_basic' => [$this->clientId, $this->clientSecret],
             'body' => ['grant_type' => 'client_credentials'],
         ]);
         if (!isset($data['access_token'])) {
-            throw new ProviderException(self::PLATFORM, 'No token in Deliveroo\'s answer.');
+            throw Redaction::withoutArguments(new ProviderException(self::PLATFORM, 'No token in Deliveroo\'s answer.'));
         }
 
         return $this->token = new Token((string) $data['access_token'], isset($data['expires_in']) ? new \DateTimeImmutable('+'.(int) $data['expires_in'].' seconds') : null);
@@ -101,12 +102,14 @@ final class Api
             $status = $response->getStatusCode();
             $content = $response->getContent(false);
         } catch (HttpExceptionInterface $e) {
-            throw new ProviderException(self::PLATFORM, 'Deliveroo could not be reached: '.$e->getMessage(), null, null, $e);
+            $secrets = [...Redaction::secrets($url, $options), ...array_filter([$this->clientSecret, $this->token?->accessToken])];
+
+            throw Redaction::withoutArguments(new ProviderException(self::PLATFORM, 'Deliveroo could not be reached: '.Redaction::text($e->getMessage(), $secrets), null, null, Redaction::copy($e, $secrets)));
         }
         $data = '' === $content ? [] : json_decode($content, true);
         if ($status < 400 && null === $data && \JSON_ERROR_NONE !== json_last_error()) {
             // A proxy's or a maintenance page: not an empty answer.
-            throw new ProviderException(self::PLATFORM, \sprintf('An answer that is not JSON (HTTP %d).', $status), $status);
+            throw Redaction::withoutArguments(new ProviderException(self::PLATFORM, \sprintf('An answer that is not JSON (HTTP %d).', $status), $status));
         }
         $data = \is_array($data) ? $data : [];
         if ($status >= 400) {
@@ -115,9 +118,9 @@ final class Api
             $code = isset($error['code']) ? (string) $error['code'] : (\is_string($data['error'] ?? null) ? $data['error'] : null);
             $message = (string) ($error['message'] ?? $data['message'] ?? $code ?? \sprintf('HTTP %d.', $status));
 
-            throw 401 === $status || 403 === $status
+            throw Redaction::withoutArguments(401 === $status || 403 === $status
                 ? new UnauthorizedException(self::PLATFORM, $message, $status, $code)
-                : new ProviderException(self::PLATFORM, 429 === $status ? 'Too many calls, try again later: '.$message : $message, $status, $code);
+                : new ProviderException(self::PLATFORM, 429 === $status ? 'Too many calls, try again later: '.$message : $message, $status, $code));
         }
 
         return $data;
