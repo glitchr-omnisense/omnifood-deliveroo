@@ -289,6 +289,14 @@ final class DeliverooPlatformTest extends TestCase
         self::assertStringStartsWith('api-sandbox.developers.deliveroo.com/', $this->calls[1][1]);
     }
 
+    /** A 2xx whose body is not JSON (a proxy's page) is not an empty answer. */
+    public function testAnAnswerThatIsNotJsonIsAnError(): void
+    {
+        $this->expectException(ProviderException::class);
+        $this->expectExceptionMessage('[deliveroo] An answer that is not JSON (HTTP 200).');
+        $this->platform([], static fn () => new MockResponse('<html><body>502 Bad Gateway</body></html>', ['http_code' => 200, 'response_headers' => ['Content-Type: text/html']]))->order('gb:0a1b');
+    }
+
     public function testErrorsAreMapped(): void
     {
         try {

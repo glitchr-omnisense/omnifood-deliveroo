@@ -221,14 +221,12 @@ Not run live (no keys).
   later: ...`; any other status of 400 or more: `ProviderException` with Deliveroo's
   `error.message` and `error.code` (the token endpoint's RFC 6749 `error` as the code).
 - A network failure: `ProviderException` `Deliveroo could not be reached: ...`.
+- A 2xx answer whose body is not JSON (a proxy's or a maintenance page): `ProviderException`
+  `An answer that is not JSON (HTTP 200).`, with the status.
 - A token answer without `access_token`: `ProviderException` `No token in Deliveroo's answer.`
 - `cancel()`: `NotSupportedException`. A menu Deliveroo would refuse: `InvalidMenuException`,
   nothing sent. A webhook not signed or not JSON: `InvalidSignatureException`; no
   `webhook_secret`: `InvalidConfigException`.
-
-> [!WARNING]
-> Known defect: a 2xx answer whose body is not JSON is read as an empty answer, where a
-> `ProviderException` is expected.
 
 ## Verified, and not
 
