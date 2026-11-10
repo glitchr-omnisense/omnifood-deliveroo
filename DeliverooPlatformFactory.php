@@ -51,7 +51,7 @@ final class DeliverooPlatformFactory extends PlatformFactory
         $str = static fn (string $key) => $config[$key] ? (string) $config[$key] : null;
 
         return new DeliverooPlatform(
-            new Api($str('client_id'), $str('client_secret'), $str('base_uri') ?? ($sandbox ? Api::SANDBOX_BASE_URI : Api::BASE_URI), $str('token_url') ?? ($sandbox ? Api::SANDBOX_TOKEN_URL : Api::TOKEN_URL), $this->http),
+            new Api($str('client_id'), $str('client_secret'), $str('base_uri') ?? ($sandbox ? Api::SANDBOX_BASE_URI : Api::BASE_URI), $str('token_url') ?? ($sandbox ? Api::SANDBOX_TOKEN_URL : Api::TOKEN_URL), $this->http, $config->backoff()),
             $str('brand_id'),
             $str('site_id'),
             $str('menu_id'),

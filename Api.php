@@ -5,8 +5,11 @@ namespace Omnifood\Deliveroo;
 use Omnifood\Exception\InvalidConfigException;
 use Omnifood\Exception\ProviderException;
 use Omnifood\Exception\UnauthorizedException;
+use Omnifood\Http\NoRetry;
 use Omnifood\Http\Redaction;
+use Omnifood\Http\Throttle;
 use Omnifood\Model\Token;
+use Omnisense\Contracts\Policy\Backoff;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface as HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -37,8 +40,11 @@ final class Api
         private readonly string $baseUri = self::BASE_URI,
         private readonly string $tokenUrl = self::TOKEN_URL,
         ?HttpClientInterface $http = null,
+        /** The waits Deliveroo asks for (omnisense/contracts' Backoff): no call while one lasts, a 429 a RateLimitedException, never retried */
+        private readonly ?Backoff $backoff = null,
     ) {
-        $this->http = $http ?? HttpClient::create();
+        // Sent once: no retry of the HTTP client's either (Http\NoRetry).
+        $this->http = NoRetry::of($http ?? HttpClient::create());
     }
 
     /**
@@ -97,9 +103,11 @@ final class Api
      */
     private function send(string $method, string $url, array $options): array
     {
+        Throttle::before($this->backoff);
         try {
             $response = $this->http->request($method, $url, $options);
             $status = $response->getStatusCode();
+            $received = $response->getHeaders(false);
             $content = $response->getContent(false);
         } catch (HttpExceptionInterface $e) {
             $secrets = [...Redaction::secrets($url, $options), ...array_filter([$this->clientSecret, $this->token?->accessToken])];
@@ -118,10 +126,13 @@ final class Api
             $code = isset($error['code']) ? (string) $error['code'] : (\is_string($data['error'] ?? null) ? $data['error'] : null);
             $message = (string) ($error['message'] ?? $data['message'] ?? $code ?? \sprintf('HTTP %d.', $status));
 
+            Throttle::after($this->backoff, self::PLATFORM, $status, $received, 'Too many calls, try again later: '.$message, $code);
+
             throw Redaction::withoutArguments(401 === $status || 403 === $status
                 ? new UnauthorizedException(self::PLATFORM, $message, $status, $code)
-                : new ProviderException(self::PLATFORM, 429 === $status ? 'Too many calls, try again later: '.$message : $message, $status, $code));
+                : new ProviderException(self::PLATFORM, $message, $status, $code));
         }
+        Throttle::after($this->backoff, self::PLATFORM, $status, $received);
 
         return $data;
     }

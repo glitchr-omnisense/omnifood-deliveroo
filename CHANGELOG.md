@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+
+- On omnisense/contracts: `policy.json`, the platform's usage policy as data (named in
+  `composer.json`'s `extra.omnisense.policy`, read 2026-11-10), given by the platform
+  (`usagePolicy()`, `DeclaresUsagePolicyInterface`). `Api` takes the platform's Backoff
+  (omnisense/omnifood's `Http\Throttle`): no call while the platform's wait lasts, a 429 a
+  `RateLimitedException` with its `Retry-After`, never retried; it sends with the HTTP client's
+  retries off (`Http\NoRetry`), so that no write goes twice. Requires omnisense/contracts.
+- PHPStan at level max (`phpstan.neon`), `phpstan-baseline.neon` what was there when it came in.
+- `Tests/BareTest` (the kernel's bare check) and the policy's tests on recorded answers.
+
 ### Fixed
 
 - A `ProviderException` no longer carries the client secret and the token. The message quoted the

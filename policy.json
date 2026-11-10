@@ -1,0 +1,48 @@
+{
+    "$schema": "https://github.com/glitchr-omnisense/contracts/blob/1.x/resources/usage-policy.schema.json",
+    "provider": "deliveroo",
+    "rateLimits": [
+        {
+            "max": 1,
+            "window": "minute",
+            "scope": "application",
+            "operations": [
+                "pushMenu"
+            ],
+            "note": "Upload menu (PUT /menu/v1/brands/{brand_id}/menus/{id}): 1 a minute per site; menus over 5 MB also 10 requests per 10 seconds per integration partner."
+        }
+    ],
+    "concurrency": null,
+    "rights": {
+        "commercial": "contract",
+        "openSourceRequired": false,
+        "caching": {
+            "permission": "contract",
+            "maxTtl": null
+        },
+        "storage": "contract",
+        "redistribution": "contract",
+        "attribution": {
+            "required": false,
+            "text": null,
+            "url": null,
+            "where": []
+        },
+        "licence": null
+    },
+    "requirements": {
+        "key": true,
+        "userAgent": {
+            "required": false,
+            "pattern": null
+        }
+    },
+    "provenance": {
+        "terms": null,
+        "policy": "https://api-docs.deliveroo.com/reference/put_v1-brands-brand-id-menus-id",
+        "contact": "https://api-docs.deliveroo.com/docs/api-and-webhooks",
+        "notes": "Contract-only: the Developer Portal serves Deliveroo's integration partners (a suite in the partner's contract, the account manager); no public API terms were found, hence rights \"contract\". Per-order limits the schema cannot count per order, not declared: PATCH /order/v1/orders/{id} (accept, deny) 5 a minute per order, and Deliveroo says it \"should be called only once per order\"; GET /order/v2/orders/{id} 1 a second per order (https://api-docs.deliveroo.com/reference/patch-order-1, https://api-docs.deliveroo.com/reference/get-order-v2). Webhooks may come more than once or out of order. No idempotency key on the order endpoints: Omnifood sends each once, never retried.",
+        "verifiedAt": "2026-11-10",
+        "declaredBy": "maintainer"
+    }
+}

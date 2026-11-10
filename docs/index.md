@@ -215,6 +215,16 @@ omnifood:
 
 Not run live (no keys).
 
+## Usage policy
+
+`policy.json` (named in `composer.json`'s `extra.omnisense.policy`, read 2026-11-10) declares
+the access contract-only (the Developer Portal serves Deliveroo's integration partners) and the
+menu upload's limit: 1 a minute per site (`pushMenu`). The per-order limits - an order's status 5
+a minute, an order read 1 a second - are in its notes: the guard does not count per order. A 429
+is a `RateLimitedException`, never retried, and Deliveroo's next calls wait for its
+`Retry-After`, unsent. Deliveroo offers no idempotency key on an order's status, which "should be
+called only once per order": each is sent once, the HTTP client's retries off. See omnisense/omnifood's [Usage policies and rate limits](https://github.com/glitchr-omnisense/omnifood/blob/1.x/docs/policies.md).
+
 ## Errors
 
 - 401 and 403: `UnauthorizedException`; 429: `ProviderException` `Too many calls, try again

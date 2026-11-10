@@ -34,6 +34,8 @@ use Omnifood\NotifiableInterface;
 use Omnifood\OrdersInterface;
 use Omnifood\StoreInterface;
 use Omnifood\Validator;
+use Omnisense\Contracts\Policy\DeclaresUsagePolicyInterface;
+use Omnisense\Contracts\Policy\UsagePolicy;
 
 /**
  * A restaurant on Deliveroo, through the Partner Platform
@@ -49,8 +51,10 @@ use Omnifood\Validator;
  * sync status. Deliveroo has no call for the restaurant to cancel an order
  * (its customer service does): cancel() throws NotSupportedException.
  */
-final class DeliverooPlatform implements OrdersInterface, MenuInterface, StoreInterface, NotifiableInterface, RefreshableInterface
+final class DeliverooPlatform implements OrdersInterface, MenuInterface, StoreInterface, NotifiableInterface, RefreshableInterface, DeclaresUsagePolicyInterface
 {
+    private static ?UsagePolicy $policy = null;
+
     /** Deliveroo lists each cereal and each nut; Omnifood's GLUTEN and NUTS are the regulation's families. */
     public const CEREALS = ['gluten_wheat', 'gluten_rye', 'gluten_barley', 'gluten_oats'];
     public const NUTS = ['nuts_almond', 'nuts_hazelnut', 'nuts_walnut', 'nuts_cashew_nut', 'nuts_pecan_nut', 'nuts_brazil_nut', 'nuts_pistachio_nut', 'nuts_macadamia_or_queensland_nut'];
@@ -75,6 +79,12 @@ final class DeliverooPlatform implements OrdersInterface, MenuInterface, StoreIn
         private readonly ?string $mealtimeImage = null,
         private readonly Validator $validator = new Validator(),
     ) {
+    }
+
+    /** Its usage policy, as the package declares it (policy.json, read once). */
+    public function usagePolicy(): UsagePolicy
+    {
+        return self::$policy ??= UsagePolicy::fromFile(__DIR__.'/policy.json');
     }
 
     public function getName(): string
