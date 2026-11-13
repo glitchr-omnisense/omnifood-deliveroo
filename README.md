@@ -48,6 +48,18 @@ omnifood:
                 mealtime_image: ~        # Deliveroo requires a picture for the menu (else the first item's)
 ```
 
+## Install
+
+```sh
+composer require omnifood/deliveroo
+```
+
+It requires `omnisense/omnifood` `^1.0`, installed with it. A real call needs: **a Deliveroo Partner
+Platform account**: Deliveroo gives production keys only to approved partners (client id and secret,
+the brand and site ids). With no account, its tests run on recorded answers (a `MockHttpClient`),
+and [omnisense/omnifood](https://github.com/glitchr-omnisense/omnifood#install-and-a-first-call)'s
+README has a first call that runs without one.
+
 ## What it does
 
 | Omnifood | Deliveroo |
